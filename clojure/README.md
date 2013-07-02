@@ -1,10 +1,6 @@
 # numerics
 
-A Clojure library designed to ... well, that part is up to you.
-
-## Usage
-
-FIXME
+Numerical tools implemented in Clojure for use in the HyPower project.
 
 ## License
 
