@@ -1,4 +1,4 @@
-# numerics
+# Clojure Numerics
 
 Numerical tools implemented in Clojure for use in the HyPower project.
 
