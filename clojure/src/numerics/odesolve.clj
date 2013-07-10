@@ -1,4 +1,4 @@
-(ns numerics.integration)
+(ns numerics.odesolve)
 
 (require '[mikera.vectorz.core :as vz])
 
