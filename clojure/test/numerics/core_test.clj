@@ -54,4 +54,15 @@
   (do 
     (add-lines result-plot (:time rk4-results) (:state rk4-results))
     (view result-plot)))
-      
+
+; a motor model ode
+(def b 0.1)
+(def J 0.01)
+(def K 0.01)
+(def R 1)
+(def L 0.5)
+
+(defn mass-spring-damper [x t]
+  (vec 
+    [
+     ]))
