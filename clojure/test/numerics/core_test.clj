@@ -55,14 +55,26 @@
     (add-lines result-plot (:time rk4-results) (:state rk4-results))
     (view result-plot)))
 
-; a motor model ode
-(def b 0.1)
-(def J 0.01)
-(def K 0.01)
-(def R 1)
-(def L 0.5)
+; a mass-spring-damper system
+(def k 0.1)
+(def m 0.1)
+(def c 0.1)
 
-(defn mass-spring-damper [x t]
+(defn mass-spring-damper
+  "An example vector diffeq for the 2nd order mass spring damper system."
+  [x t]
+  (let [x1 (first x)
+        x2 (second x)]
   (vec 
-    [
-     ]))
+    [x2
+     (* -1 (+ (* (/ k m) x1) (* (/ c m) x2))) ])))
+
+; solve it!
+(time (let [x0 (vec [1 0]) ; set initial condition to some vector
+            results (forward-rk4 mass-spring-damper x0 0 10 0.01) ; solve numerically using RK4
+            x1 (map first (:state results)) ; extract the states
+            x2 (map second (:state results))
+            result-plot (xy-plot (:time results) x1 :title "Mass-Spring-Damper Solution" :x-label "Time (s)" :y-label "State" :legend true)] ; now use Incanter to display our wonderful results...
+        (do
+          (add-lines result-plot (:time results) x2)
+          (view result-plot))))
