@@ -2,7 +2,7 @@
   (:use clojure.test
         numerics.odesolve))
 
-(use '(incanter core charts))
+(use '(incanter core charts pdf))
 
 ; Here we simulate the vector differential equation dot{x}_1 = -x_1 + x_2; dot{x}_2 = -x_2:
 (defn vector-ode [x t]
@@ -72,9 +72,10 @@
 ; solve it!
 (time (let [x0 (vec [1 0]) ; set initial condition to some vector
             results (forward-rk4 mass-spring-damper x0 0 10 0.01) ; solve numerically using RK4
-            x1 (map first (:state results)) ; extract the states
-            x2 (map second (:state results))
-            result-plot (xy-plot (:time results) x1 :title "Mass-Spring-Damper Solution" :x-label "Time (s)" :y-label "State" :legend true)] ; now use Incanter to display our wonderful results...
+            pos (map first (:state results)) ; extract the states
+            speed (map second (:state results))
+            result-plot (xy-plot (:time results) pos :title "Mass-Spring-Damper Solution" :x-label "Time (s)" :y-label "State" :legend true)] ; now use Incanter to display our wonderful results...
         (do
-          (add-lines result-plot (:time results) x2)
-          (view result-plot))))
+          (add-lines result-plot (:time results) speed)
+          (view result-plot)
+          (save-pdf result-plot "mass-spring-damper.pdf"))))
