@@ -12,6 +12,21 @@ interval t0 to tf."
       {:state xs :time ts}
       (recur (mat/add x (mat/mul (diffeq x t) delT)) (+ t delT) (conj xs x) (conj ts t)))))
 
+(defn euler
+  "A function that numerically integrates a first order diffeq of the form xdot=f(x,t) in time over the 
+interval t0 to tf. If t0 > tf, then this solver operates in reverse."
+  [diffeq x0 t0 tf delT]
+  (let [op (if (> t0 tf)
+             mat/sub
+             mat/add)
+        comp (if (> t0 tf)
+             <
+             >)]
+    (loop [x x0 t t0 xs [] ts []]
+      (if (comp t tf)
+        {:state xs :time ts}
+        (recur (op x (mat/mul (diffeq x t) delT)) (op t delT) (conj xs x) (conj ts t))))))
+
 (defn forward-rk4
   "A function that applies 4th order runge kutta to numerically integrate a first order differential equation of 
 the form xdot=f(x,t) over the interval t0 to tf."

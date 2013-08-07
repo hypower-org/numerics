@@ -3,7 +3,7 @@
 ; Note: this code came from the blog entry http://mattiasholmqvist.se/2009/10/integral-calculation-in-clojure/
 ; It's implementation is more "functional" than I was originally thinking.
 
-(defn sub-series [f a h n index-filter]
+(defn- sub-series [f a h n index-filter]
   (map #(f (+ a (* h %))) (filter index-filter (range 1 n))))
 
 (defn simpson [f a b n]

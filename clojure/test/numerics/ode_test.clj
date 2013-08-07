@@ -79,3 +79,13 @@
           (add-lines result-plot (:time results) speed)
           (view result-plot)
           (save-pdf result-plot "mass-spring-damper.pdf"))))
+
+(time (let [x0 (vec [1 0]) ; set initial condition to some vector
+            results (euler mass-spring-damper x0 0 10 0.01) ; solve numerically using general euler
+            pos (map first (:state results)) ; extract the states
+            speed (map second (:state results))
+            result-plot (xy-plot (:time results) pos :title "Mass-Spring-Damper Solution" :x-label "Time (s)" :y-label "State" :legend true)] ; now use Incanter to display our wonderful results...
+        (do
+          (add-lines result-plot (:time results) speed)
+          (view result-plot)
+          (save-pdf result-plot "mass-spring-damper.pdf"))))
