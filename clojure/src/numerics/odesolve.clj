@@ -3,6 +3,12 @@
 (require '[clojure.core.matrix :as mat])
 (mat/set-current-implementation :vectorz)
 
+(defn my-round
+  "A rounding function that rounds n to its closest value of dt."
+  [n dt]
+  (* (Math/round (/ n dt)) dt)
+  )
+
 (defn forward-euler
   "A function that numerically integrates a first order diffeq of the form xdot=f(x,t) forward in time over the 
 interval t0 to tf."
@@ -20,12 +26,21 @@ interval t0 to tf. If t0 > tf, then this solver operates in reverse."
              mat/sub
              mat/add)
         comp (if (> t0 tf)
-             <
-             >)]
-    (loop [x x0 t t0 xs [] ts []]
-      (if (comp t tf)
+             <=
+             >=)]
+    (loop [x x0 t t0 xs [] ts [] n 0]
+      ;(println "num of xs: " (count xs))
+      ;(println "time step: " (my-round t delT))
+      (if (comp (my-round t delT) tf)
         {:state xs :time ts}
-        (recur (op x (mat/mul (diffeq x t) delT)) (op t delT) (conj xs x) (conj ts t))))))
+        ;(do 
+          ;(println "recurring again..." n)
+          (recur (op x (mat/mul (diffeq x t) delT)) (op t delT) (conj xs x) (conj ts t) (inc n) )
+        ;  )
+        )
+      )
+    )
+  )
 
 (defn forward-rk4
   "A function that applies 4th order runge kutta to numerically integrate a first order differential equation of 
