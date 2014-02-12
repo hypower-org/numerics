@@ -9,15 +9,6 @@
   (* (Math/round (/ n dt)) dt)
   )
 
-(defn forward-euler
-  "A function that numerically integrates a first order diffeq of the form xdot=f(x,t) forward in time over the 
-interval t0 to tf."
-  [diffeq x0 t0 tf delT]
-  (loop [x x0 t t0 xs [] ts []]
-    (if (> t tf)
-      {:state xs :time ts}
-      (recur (mat/add x (mat/mul (diffeq x t) delT)) (+ t delT) (conj xs x) (conj ts t)))))
-
 (defn euler
   "A function that numerically integrates a first order diffeq of the form xdot=f(x,t) in time over the 
 interval t0 to tf. If t0 > tf, then this solver operates in reverse."
@@ -29,14 +20,9 @@ interval t0 to tf. If t0 > tf, then this solver operates in reverse."
              <=
              >=)]
     (loop [x x0 t t0 xs [] ts [] n 0]
-      ;(println "num of xs: " (count xs))
-      ;(println "time step: " (my-round t delT))
       (if (comp (my-round t delT) tf)
         {:state xs :time ts}
-        ;(do 
-          ;(println "recurring again..." n)
           (recur (op x (mat/mul (diffeq x t) delT)) (op t delT) (conj xs x) (conj ts t) (inc n) )
-        ;  )
         )
       )
     )
